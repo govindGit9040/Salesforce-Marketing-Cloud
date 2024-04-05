@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <style class="main_style">
+        .layout-canvas-g {
+            background-color: #fff;
+            border: none;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 0;
+            width: 100%;
+        }
+
+        .layout-canvas-g>.header,
+        .layout-canvas-g>.section,
+        .layout-canvas-g>.footer {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            word-wrap: break-word;
+        }
+
+        .layout-canvas-g>.section {
+            margin: 10px 0;
+        }
+
+        .layout-canvas-g>.section>.columns {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            word-wrap: break-word;
+        }
+
+        body {
+            color: #000;
+            font-size: 12px;
+            margin: 0 auto;
+            max-width: 780px;
+            width: 90%;
+            font-family: "Hanken Grotesk", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mobile-hidden {
+                display: none !important;
+            }
+
+            .responsive-td {
+                width: 100% !important;
+                display: block !important;
+                padding: 0 !important;
+            }
+        }
+
+        .layout-canvas-g>.section>.columns {
+            width: 100%;
+        }
+
+
+
+
+        .content_area,
+        .form_area {
+            display: table;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+
+        .flex_area {
+            display: flex;
+            background: #f1f1f1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .flex_area .cont_area {
+            width: calc(50% - 50px);
+            padding: 25px;
+        }
+
+        .flex_area .img_area {
+            width: 50%;
+           
+        }
+        .flex_area .img_area.discount{
+            background-image: url(https://d3k81ch9hvuctc.cloudfront.net/company/NmzYC6/images/11dab583-55d7-4b14-9a95-5ad8d23244a3.jpeg);
+            background-position: left top;
+            background-size: cover;
+        }
+        .flex_area .img_area.success{
+            background-image: url(https://d3k81ch9hvuctc.cloudfront.net/company/NmzYC6/images/bc395e54-11c5-4489-aeb4-f4fe97661abf.jpeg);
+            background-position: left top;
+            background-size: cover;
+        }
+
+        .flex_area .img_area img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .flex_area .cont_area h1 {
+            font-size: 38px;
+            font-weight: 400;
+            margin: 0 0 20px;
+        }
+
+        .flex_area .cont_area h2 {
+            font-size: 28px;
+            font-weight: 500;
+            margin: 0px 0 20px;
+        }
+
+        .flex_area .cont_area p {
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .flex_area .cont_area form p {
+            font-size: 10px;
+            font-weight: 500;
+            line-height: 11px;
+            margin-top: 0;
+        }
+
+        .flex_area .cont_area form .input_fld {
+            margin-bottom: 12px;
+        }
+
+        .flex_area .cont_area form .input_fld input {
+            padding: 17px 24px;
+            width: calc(100% - 50px);
+            font-size: 17px;
+            border: 1px solid rgb(29, 29, 27);
+            border-radius: 60px;
+            outline: 0;
+        }
+
+        .button_area {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .button_area input {
+            display: block;
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 60px;
+            outline: 0;
+            border: 1px solid #000;
+            margin-top: 12px;
+            font-size: 20px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: "Hanken Grotesk", sans-serif !important;
+            background: #fff;
+        }
+
+
+
+        .button_area input.btn_singin {
+            background: #f6e7e2;
+            border: 0;
+        }
+
+        .button_area input:hover {
+            background: #f8b0a3;
+        }
+
+
+        .flex_area .cont_area .success_block {
+            padding: 30px 0px;
+        }
+
+        .flex_area .cont_area .success_block p {
+            font-size: 20px;
+            margin-bottom: 0;
+            margin-top: 10px;
+        }
+
+        .flex_area .cont_area .success_block h4 {
+            font-size: 24px;
+            font-weight: 500;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="content_area">
+        <div class="form_area">
+
+            %%[
+            var @email, @phone
+
+
+            if RequestParameter("submitted") == "submitted" then
+
+            set @phone = RequestParameter("phone")
+            set @email = RequestParameter("email")
+            set @upsertCount = upsertData("Esther_and_co_DE",1,"email", @email, "phone", @phone)
+
+
+            endif
+
+            ]%%
+            <div class="flex_area">
+                <div class="cont_area">
+                    %%[if RequestParameter("submitted") != "submitted" then]%%
+                    <h1>
+                        WANT 15% OFF +
+                    </h1>
+                    <h2>
+                        FREE EXPRESS SHIPPING
+                    </h2>
+                    <p>
+                        Join our mailing list to get the latest drops delivered to your inbox daily!
+                    </p>
+                    <form action="">
+                        <div class="input_fld">
+                            <input type="text" name="email" placeholder="Email">
+                        </div>
+                        <div class="input_fld">
+                            <input type="text" name="phone" placeholder="Phone Number">
+                        </div>
+                        <input id="submitted" type="hidden" name="submitted" value="submitted" />
+                        <p>
+                            <small>
+                                By submitting this form and signing up for texts, you consent to receive marketing text
+                                messages (e.g. promos, cart reminders) from Esther & Co. at the number provided,
+                                including messages sent by autodialer. Consent is not a condition of purchase. Msg &
+                                data rates may apply. Msg frequency varies. Unsubscribe at any time by replying STOP or
+                                clicking the unsubscribe link (where available). <a
+                                    href="https://www.esther.com.au/pages/terms-conditions" target="_blank">Privacy
+                                    Policy</a> & <a href="https://www.esther.com.au/pages/terms-conditions">Terms</a>.
+                                *Discount Code
+                                not applicable during sale period.
+                            </small>
+                        </p>
+                        <div class="button_area">
+                            <input type="submit" class="btn_singin" value="Sign Me Up">
+                            <input type="submit" class="btn_close_popup" value="No, Thanks">
+                        </div>
+                    </form>
+                    %%[Endif]%%
+
+
+                    %%[if RequestParameter("submitted") == "submitted" then]%%
+                    <div class="success_block">
+                        <h1>SUCCESS!</h1>
+                        <p>Thanks for signing up! Your 15% OFF code is: </p>
+                        <p><strong>WELCOME15</strong> and can be used
+                            straight
+                            away!</p>
+                        <h4>
+                            Happy Shopping!
+                        </h4>
+                    </div>
+
+                    %%[Endif]%%
+                </div>
+
+                %%[if RequestParameter("submitted") != "submitted" then]%%
+                <div class="img_area discount">
+                </div>
+                %%[Endif]%%
+                %%[if RequestParameter("submitted") == "submitted" then]%%
+                <div class="img_area success">
+                </div>
+
+                %%[Endif]%%
+
+
+
+            </div>
+
+
+        </div>
+    </div>
+</body>
+
+</html>
