@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Include Google reCAPTCHA script -->
+    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+    <style class="main_style">
+        .layout-canvas-g {
+            background-color: #fff;
+            border: none;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 0;
+            width: 100%;
+        }
+
+        .layout-canvas-g>.header,
+        .layout-canvas-g>.section,
+        .layout-canvas-g>.footer {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            word-wrap: break-word;
+        }
+
+        .layout-canvas-g>.section {
+            margin: 10px 0;
+        }
+
+        .layout-canvas-g>.section>.columns {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            word-wrap: break-word;
+        }
+
+        body {
+            color: #000;
+            font-family: Arial;
+            font-size: 12px;
+            margin: 0 auto;
+            max-width: 1280px;
+        }
+
+        .cont_area h3 {
+            color: #0e3d80;
+            font-size: 37px;
+            font-weight: 500;
+            font-family: system-ui;
+            text-align: center;
+            margin: 0 0 30px;
+        }
+
+        .cont_area .input_fld {
+            width: 100%;
+            position: relative;
+            margin: 0 0 20px;
+        }
+
+        .cont_area .input_fld input[type="text"],
+        .cont_area .input_fld select {
+            display: block;
+            width: 100%;
+            padding: 12px 0;
+            outline: 0;
+            border: 0;
+            border-bottom: 1.5px solid #ddd;
+            font-size: 15px;
+        }
+
+
+        .cont_area .input_fld .error_message {
+            color: #ff5050;
+            font-size: 11px;
+            margin-top: 5px;
+            position: absolute;
+        }
+
+        input.btn_singin {
+            color: #f0d734;
+            background: #0e3d80;
+            font-size: 16px;
+            font-weight: 600;
+            border: 0;
+            padding: 12px 20px;
+            border-radius: 50px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        input.btn_singin:hover,
+        input.btn_singin:focus {
+            cursor: pointer;
+            background: #f0d734;
+            color: #0e3d80;
+        }
+
+        .cont_area {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .success_block {
+            text-align: center;
+        }
+
+        .success_block p,
+        .success_block a {
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+        .success_block a {
+            color: #0e3d80;
+        }
+
+        .cont_area .input_fld label {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .cont_area .input_fld label input#sendmail {
+            margin: 0;
+            margin-right: 10px;
+        }
+
+        .button_area {
+            display: table;
+            width: 100%;
+            padding-top: 20px;
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mobile-hidden {
+                display: none !important;
+            }
+
+            .responsive-td {
+                width: 100% !important;
+                display: block !important;
+                padding: 0 !important;
+            }
+
+            .cont_area h3 {
+                font-size: 24px;
+            }
+        }
+
+
+        .layout-canvas-g>.section>.columns {
+            width: 100%;
+        }
+
+        .error_message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function validateCountry() {
+            var country = document.getElementById("country").value;
+            if (country === "Others") {
+                alert("Sorry, we are just accepting Australia");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="content_area">
+        <div class="form_area">
+
+            %%[
+            VAR @name, @email, @company, @jobTitle, @country, @domain, @isValid, @nonWorkDomains, @i, @currentDomain,
+            @sendmail
+
+            SET @name = RequestParameter("name")
+            SET @email = RequestParameter("email")
+            SET @company = RequestParameter("company")
+            SET @jobTitle = RequestParameter("jobTitle")
+            SET @country = RequestParameter("country")
+            SET @sendmail = RequestParameter("sendmail")
+
+            IF RequestParameter("submitted") == "submitted" THEN
+
+            SET @domain = Substring(@email, Add(IndexOf(@email, "@"), 1), Length(@email))
+
+            /* List of non-work email domains */
+            SET @nonWorkDomains =
+            "gmail.com,yahoo.com,hotmail.com,rediffmail.com,outlook.com,aol.com,sify.com,icloud.com,protonmail.com,zohomail.com"
+
+            SET @isValid = "true"
+
+            /* Split the non-work domains into a rowset */
+            SET @nonWorkDomains = BuildRowsetFromString(@nonWorkDomains, ",")
+
+            /* Loop through the non-work domains and check if the email domain matches any */
+            FOR @i = 1 TO RowCount(@nonWorkDomains) DO
+            SET @currentDomain = Field(Row(@nonWorkDomains, @i), 1)
+            IF Lowercase(@domain) == Lowercase(@currentDomain) THEN
+            SET @isValid = "false"
+            EXIT
+            ENDIF
+            NEXT @i
+
+            IF @isValid == "true" AND @country == "Australia" THEN
+            SET @upsertCount = upsertData("IRP_form",1,"name", @name, "email", @email, "company", @company, "jobTitle",
+            @jobTitle,
+            "country", @country, "sendmail", @sendmail)
+            ELSE
+            SET @isValid = "false"
+            ENDIF
+
+            ENDIF
+            ]%%
+
+            <div class="flex_area">
+                <div class="cont_area">
+                    %%[IF RequestParameter("submitted") != "submitted" OR @isValid == "false" THEN]%%
+                    <h3>
+                        Chemical Labelling
+                    </h3>
+                    <form action="" method="post" onsubmit="return validateCountry();">
+                        <div class="input_fld">
+                            <input type="text" name="name" placeholder="Name" value="%%=v(@name)=%%">
+                        </div>
+                        <div class="input_fld">
+                            <input type="text" name="email" placeholder="Email" value="%%=v(@email)=%%">
+                            %%[IF @isValid == "false" AND Length(@email) > 0 THEN]%%
+                            <div class="error_message">Please provide a valid work email address.</div>
+                            %%[ENDIF]%%
+                        </div>
+                        <div class="input_fld">
+                            <input type="text" name="company" placeholder="Company" value="%%=v(@company)=%%">
+                        </div>
+                        <div class="input_fld">
+                            <input type="text" name="jobTitle" placeholder="Job Title" value="%%=v(@jobTitle)=%%">
+                        </div>
+                        <div class="input_fld">
+                            <select name="country" id="country">
+                                <option value="">Select Country</option>
+                                <option value="Australia" %%[IF @country=="Australia" THEN]%% selected %%[ENDIF]%%>
+                                    Australia</option>
+                                <option value="Others" %%[IF @country=="Others" THEN]%% selected %%[ENDIF]%%>Others
+                                </option>
+                            </select>
+                        </div>
+                        <div class="input_fld">
+                            <label for="sendmail">
+                                <input type="checkbox" name="sendmail" id="sendmail"> By checking, you agree to join our
+                                mailing list.
+                            </label>
+
+                        </div>
+                      <!--   <div class="input_fld">
+                            Google reCAPTCHA widget
+                            <div class="g-recaptcha" data-sitekey="6LfnaukpAAAAAC38ciO426XE6uOVOSdhQbwsqMCZ"></div>
+                        </div> -->
+                        <input id="submitted" type="hidden" name="submitted" value="submitted" />
+                        <div class="button_area">
+                            <input type="submit" class="btn_singin" value="Download Now">
+                        </div>
+                    </form>
+                    %%[ENDIF]%%
+
+                    %%[IF RequestParameter("submitted") == "submitted" AND @isValid == "true" THEN]%%
+                    <div class="success_block">
+                        <h3>
+                            When Am I At Risk In The Workplace?
+                        </h3>
+                        <p>Thank you for submitting your details.</p>
+                        <a
+                            href="https://irp.cdn-website.com/3352c1d5/files/uploaded/IRP+Toolbox+Talk+-+When+am+I+at+risk+in+the+workplace.pdf">Download
+                            Your Next Safety Toolbox Talks Here!</a>
+                        <p>
+                            Or <a href="https://www.irp.net.au/toolbox-talks">download more Toolbox Talks.</a>
+                        </p>
+                    </div>
+                    %%[ENDIF]%%
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
